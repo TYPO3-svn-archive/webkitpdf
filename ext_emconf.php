@@ -12,7 +12,7 @@
 
 $EM_CONF[$_EXTKEY] = array(
 	'title' => 'Webkit PDFs',
-	'description' => 'Generate PDF files using Webkit rendering engine.',
+	'description' => 'Generate PDF files using WebKit rendering engine.',
 	'category' => 'plugin',
 	'shy' => 0,
 	'version' => '1.0.0',

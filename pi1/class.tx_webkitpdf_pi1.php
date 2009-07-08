@@ -22,7 +22,7 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 /**
- * Plugin 'Webkit PDFs' for the 'webkitpdf' extension.
+ * Plugin 'WebKit PDFs' for the 'webkitpdf' extension.
  *
  * @author Reinhard Führicht <rf@typoheads.at>
  */
