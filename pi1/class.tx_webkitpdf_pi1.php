@@ -51,6 +51,11 @@ class tx_webkitpdf_pi1 extends tslib_pibase {
 		if($this->conf['customTempOutputPath']) {
 			$this->outputPath = $this->conf['customTempOutputPath'];
 		}
+		$this->paramName = 'selected_pages';
+		if($this->conf['customParameterName']) {
+			$this->paramName = $this->conf['customParameterName'];
+		}
+		
 		$this->filename = t3lib_div::tempnam($this->conf['filePrefix']) . '.pdf';
 		$this->filenameOnly = basename($this->filename);
 	}
@@ -65,7 +70,8 @@ class tx_webkitpdf_pi1 extends tslib_pibase {
 	public function main($content,$conf)	{
 		$this->init($conf);
 
-		$pids = t3lib_div::_GP('selected_pages');
+		$pids = t3lib_div::_GP($this->paramName);
+
 		$content = '';
 		if(!empty($pids)) {
 			if(!is_array($pids)) {
