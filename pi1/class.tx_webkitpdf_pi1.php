@@ -83,6 +83,7 @@ class tx_webkitpdf_pi1 extends tslib_pibase {
 								implode(' ', $urls) . ' ' .
 								$this->filename;
 				
+				
 				exec($scriptCall);
 
 				header('Content-type: application/pdf');
@@ -109,7 +110,7 @@ class tx_webkitpdf_pi1 extends tslib_pibase {
 			$options[] = '--footer-left " Copyright ' . date('Y', time()) . $this->conf['copyrightNotice'] . '"';
 		}
 
-		$options[] = '--footer-right [page]/[toPage]';
+		$options[] = '--footddder-right [page]/[toPage]';
 		$options[] = '--footer-font-size 6pt';
 		$options[] = '--header-font-size 6pt';
 		$options[] = '--margin-left 15mm';
