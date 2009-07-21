@@ -43,6 +43,7 @@ class tx_webkitpdf_pi1 extends tslib_pibase {
 	protected function init($conf) {
 		$this->conf = $conf;
 		$this->pi_setPiVarDefaults();
+		
 		$this->scriptPath = t3lib_extMgm::extPath('webkitpdf') . 'res/';
 		if($this->conf['customScriptPath']) {
 			$this->scriptPath = $this->conf['customScriptPath'];
@@ -51,7 +52,7 @@ class tx_webkitpdf_pi1 extends tslib_pibase {
 		if($this->conf['customTempOutputPath']) {
 			$this->outputPath = $this->conf['customTempOutputPath'];
 		}
-		$this->paramName = 'selected_pages';
+		$this->paramName = 'urls';
 		if($this->conf['customParameterName']) {
 			$this->paramName = $this->conf['customParameterName'];
 		}
@@ -70,26 +71,18 @@ class tx_webkitpdf_pi1 extends tslib_pibase {
 	public function main($content,$conf)	{
 		$this->init($conf);
 
-		$pids = t3lib_div::_GP($this->paramName);
-
+		$urls = $this->piVars[$this->paramName];
 		$content = '';
-		if(!empty($pids)) {
-			if(!is_array($pids)) {
-				$pids_array = t3lib_div::trimExplode(',', $pids);
-			} else {
-				$pids_array = $pids;
-			}
-			$urls = array();
-			foreach($pids_array as $pid) {
-				$urls[] = $this->getPageURL($pid);
-			}
+		if(!empty($urls)) {
 			if(count($urls) > 0) {
-
+				foreach($urls as &$url) {
+					$url = '"' . $url . '"';
+				}
 				$scriptCall = 	$this->scriptPath. 'wkhtmltopdf ' .
 								$this->buildScriptOptions() . ' ' .
 								implode(' ', $urls) . ' ' .
 								$this->filename;
-
+				
 				exec($scriptCall);
 
 				header('Content-type: application/pdf');
@@ -108,7 +101,9 @@ class tx_webkitpdf_pi1 extends tslib_pibase {
 	 */
 	protected function buildScriptOptions() {
 		$options = array();
-		$options[] = '--header-center [webpage]';
+		if($this->conf['pageURLInHeader']) {
+			$options[] = '--header-center [webpage]';
+		}
 		
 		if($this->conf['copyrightNotice']) {
 			$options[] = '--footer-left " Copyright ' . date('Y', time()) . $this->conf['copyrightNotice'] . '"';
@@ -152,22 +147,6 @@ class tx_webkitpdf_pi1 extends tslib_pibase {
 		return $path;
 	}
 
-	/**
-	 * Returns the URL of the page with ID $pid.
-	 *
-	 * @param	int		$pid: The page ID to be linked
-	 * @return	The URL
-	 */
-	protected function getPageURL($pid) {
-		$lang = t3lib_div::_GP('L');
-		if($lang) {
-			$params = array(
-				'L' => $lang
-			);
-		}
-		$url = t3lib_div::getIndpEnv('TYPO3_REQUEST_HOST') . '/' . $this->cObj->getTypoLink_URL($pid, $params);
-		return $url;
-	}
 }
 
 
