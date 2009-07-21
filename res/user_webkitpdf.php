@@ -10,7 +10,9 @@ class user_webkitpdf {
 		}
 		
 		$text = 'Save as PDF';
-		if($conf['linkText']) {
+		if($conf['linkText'] && $conf['linkText.']) {
+			$text = $this->cObj->cObjGetSingle($conf['linkText'], $conf['linkText.']);
+		} elseif($conf['linkText']) {
 			$text = $conf['linkText'];
 		}
 		
