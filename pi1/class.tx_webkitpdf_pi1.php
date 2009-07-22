@@ -110,7 +110,7 @@ class tx_webkitpdf_pi1 extends tslib_pibase {
 			$options[] = '--footer-left " Copyright ' . date('Y', time()) . $this->conf['copyrightNotice'] . '"';
 		}
 
-		$options[] = '--footddder-right [page]/[toPage]';
+		$options[] = '--footer-right [page]/[toPage]';
 		$options[] = '--footer-font-size 6pt';
 		$options[] = '--header-font-size 6pt';
 		$options[] = '--margin-left 15mm';
