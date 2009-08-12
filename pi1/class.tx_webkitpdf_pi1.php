@@ -83,7 +83,9 @@ class tx_webkitpdf_pi1 extends tslib_pibase {
 								implode(' ', $urls) . ' ' .
 								$this->filename;
 				
-				
+				if($this->conf['debugScriptCall'] === '1') {
+					print $scriptCall;
+				}
 				exec($scriptCall);
 
 				header('Content-type: application/pdf');

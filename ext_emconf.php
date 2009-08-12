@@ -3,7 +3,7 @@
 ########################################################################
 # Extension Manager/Repository config file for ext: "webkitpdf"
 #
-# Auto generated 15-07-2009 14:31
+# Auto generated 21-07-2009 15:19
 #
 # Manual updates:
 # Only the data in the array - anything else is removed by next write.
@@ -15,7 +15,7 @@ $EM_CONF[$_EXTKEY] = array(
 	'description' => 'Generate PDF files using WebKit rendering engine.',
 	'category' => 'plugin',
 	'shy' => 0,
-	'version' => '1.0.0',
+	'version' => '1.0.1',
 	'dependencies' => '',
 	'conflicts' => '',
 	'priority' => '',
@@ -40,7 +40,7 @@ $EM_CONF[$_EXTKEY] = array(
 		'suggests' => array(
 		),
 	),
-	'_md5_values_when_last_written' => 'a:8:{s:12:"ext_icon.gif";s:4:"1b05";s:17:"ext_localconf.php";s:4:"b2b5";s:14:"ext_tables.php";s:4:"36e9";s:16:"locallang_db.xml";s:4:"5127";s:14:"doc/manual.sxw";s:4:"d82b";s:15:"res/wkhtmltopdf";s:4:"1a41";s:30:"pi1/class.tx_webkitpdf_pi1.php";s:4:"903a";s:17:"pi1/locallang.xml";s:4:"3153";}',
+	'_md5_values_when_last_written' => 'a:9:{s:12:"ext_icon.gif";s:4:"1b05";s:17:"ext_localconf.php";s:4:"b2b5";s:14:"ext_tables.php";s:4:"36e9";s:16:"locallang_db.xml";s:4:"5127";s:14:"doc/manual.sxw";s:4:"3f7e";s:22:"res/user_webkitpdf.php";s:4:"f98a";s:15:"res/wkhtmltopdf";s:4:"1a41";s:30:"pi1/class.tx_webkitpdf_pi1.php";s:4:"4c8e";s:17:"pi1/locallang.xml";s:4:"3153";}',
 	'suggests' => array(
 	),
 );
