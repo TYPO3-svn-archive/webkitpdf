@@ -31,6 +31,7 @@ class user_webkitpdf {
 		return $this->cObj->getTypolink($text, $pid, $params);
 		
 	}
+	
 }
 
 ?>

@@ -28,11 +28,19 @@
  */
 
 require_once(PATH_tslib.'class.tslib_pibase.php');
+require_once(t3lib_extMgm::extPath('webkitpdf') . '/res/class.tx_webkitpdf_cache.php');
 
 class tx_webkitpdf_pi1 extends tslib_pibase {
 	var $prefixId = 'tx_webkitpdf_pi1';
 	var $scriptRelPath = 'pi1/class.tx_webkitpdf_pi1.php';	
 	var $extKey = 'webkitpdf';	
+	
+	protected $cacheManager;
+	protected $scriptPath;
+	protected $outputPath;
+	protected $paramName;
+	protected $filename;
+	protected $filenameOnly;
 	
 	/**
 	 * Init parameters. Reads TypoScript settings.
@@ -48,17 +56,39 @@ class tx_webkitpdf_pi1 extends tslib_pibase {
 		if($this->conf['customScriptPath']) {
 			$this->scriptPath = $this->conf['customScriptPath'];
 		}
-		$this->outputPath = t3lib_div::getIndpEnv('TYPO3_DOCUMENT_ROOT') . '/typo3temp/';
+		$this->outputPath = t3lib_div::getIndpEnv('TYPO3_DOCUMENT_ROOT');
 		if($this->conf['customTempOutputPath']) {
-			$this->outputPath = $this->conf['customTempOutputPath'];
+			$this->outputPath .= $this->sanitizePath($this->conf['customTempOutputPath']);
+		} else {
+			$this->outputPath .=  '/typo3temp/tx_webkitpdf/';
 		}
+		
 		$this->paramName = 'urls';
 		if($this->conf['customParameterName']) {
 			$this->paramName = $this->conf['customParameterName'];
 		}
 		
-		$this->filename = t3lib_div::tempnam($this->conf['filePrefix']) . '.pdf';
+		$this->filename = $this->outputPath . $this->conf['filePrefix'] . $this->generateHash() . '.pdf';		
 		$this->filenameOnly = basename($this->filename);
+		if($this->conf['staticFileName'] && $this->conf['staticFileName.']) {
+			$this->filenameOnly = $this->cObj->cObjGetSingle($this->conf['staticFileName'], $this->conf['staticFileName.']);
+		} elseif($this->conf['staticFileName']) {
+			$this->filenameOnly = $this->conf['staticFileName'];
+		}
+			
+		if(substr($this->filenameOnly, strlen($this->filenameOnly) - 4) !== '.pdf') {
+			$this->filenameOnly .= '.pdf';
+		}
+		
+		$this->cacheManager = t3lib_div::makeInstance('tx_webkitpdf_cache');
+	}
+	
+	protected function generateHash(){
+		$result = '';
+		$charPool = '0123456789abcdefghijklmnopqrstuvwxyz';
+		for($p = 0; $p < 15; $p++)
+			$result .= $charPool[mt_rand(0, strlen($charPool) - 1)];
+		return sha1(md5(sha1($result)));
 	}
 
 	/**
@@ -75,19 +105,34 @@ class tx_webkitpdf_pi1 extends tslib_pibase {
 		$content = '';
 		if(!empty($urls)) {
 			if(count($urls) > 0) {
+				
+				$origUrls = implode(' ', $urls);
+				
 				foreach($urls as &$url) {
 					$url = '"' . $url . '"';
 				}
-				$scriptCall = 	$this->scriptPath. 'wkhtmltopdf ' .
-								$this->buildScriptOptions() . ' ' .
-								implode(' ', $urls) . ' ' .
-								$this->filename;
 				
-				if($this->conf['debugScriptCall'] === '1') {
-					print $scriptCall;
+				// not in cache. generate PDF file
+				if(!$this->cacheManager->isInCache($origUrls)) {
+					
+					$scriptCall = 	$this->scriptPath. 'wkhtmltopdf ' .
+									$this->buildScriptOptions() . ' ' .
+									implode(' ', $urls) . ' ' .
+									$this->filename;
+					
+					if($this->conf['debugScriptCall'] === '1') {
+						print $scriptCall;
+					}
+					exec($scriptCall);
+					
+					$this->cacheManager->store($origUrls, $this->filename);
+					
+				} else {
+					
+					//read filepath from cache
+					$this->filename = $this->cacheManager->get($origUrls);
 				}
-				exec($scriptCall);
-
+				
 				header('Content-type: application/pdf');
 				header('Content-Disposition: attachment; filename="' . $this->filenameOnly . '"');
 				readfile($this->filename);
@@ -151,8 +196,6 @@ class tx_webkitpdf_pi1 extends tslib_pibase {
 	}
 
 }
-
-
 
 if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/webkitpdf/pi1/class.tx_webkitpdf_pi1.php'])	{
 	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/webkitpdf/pi1/class.tx_webkitpdf_pi1.php']);
