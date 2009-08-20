@@ -19,7 +19,9 @@ class tx_webkitpdf_cache {
 				$GLOBALS['TYPO3_DB']->sql_free_result($res);
 				$GLOBALS['TYPO3_DB']->exec_DELETEquery('tx_webkitpdf_cache', 'crdate<' . $threshold);
 				foreach($filenames as $file) {
-					unlink($file);
+					if(file_exists($file)) {
+						unlink($file);
+					}
 				}
 			}
 		}
