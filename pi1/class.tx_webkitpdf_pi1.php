@@ -80,14 +80,17 @@ class tx_webkitpdf_pi1 extends tslib_pibase {
 			$this->filenameOnly .= '.pdf';
 		}
 		
+		$this->readScriptSettings();
+		
 		$this->cacheManager = t3lib_div::makeInstance('tx_webkitpdf_cache');
 	}
 	
 	protected function generateHash(){
 		$result = '';
 		$charPool = '0123456789abcdefghijklmnopqrstuvwxyz';
-		for($p = 0; $p < 15; $p++)
+		for($p = 0; $p < 15; $p++) {
 			$result .= $charPool[mt_rand(0, strlen($charPool) - 1)];
+		}
 		return sha1(md5(sha1($result)));
 	}
 
@@ -113,7 +116,7 @@ class tx_webkitpdf_pi1 extends tslib_pibase {
 				}
 				
 				// not in cache. generate PDF file
-				if(!$this->cacheManager->isInCache($origUrls)) {
+				if(!$this->cacheManager->isInCache($origUrls) || $this->conf['debugScriptCall'] === '1') {
 					
 					$scriptCall = 	$this->scriptPath. 'wkhtmltopdf ' .
 									$this->buildScriptOptions() . ' ' .
@@ -141,6 +144,35 @@ class tx_webkitpdf_pi1 extends tslib_pibase {
 		
 		return $this->pi_wrapInBaseClass($content);
 	}
+	
+	protected function readScriptSettings() {
+		$defaultSettings = array(
+			'footer-right' => '[page]/[toPage]',
+			'footer-font-size' => '6pt',
+			'header-font-size' => '6pt',
+			'margin-left' => '15mm',
+			'margin-right' => '15mm',
+			'margin-top' => '15mm',
+			'margin-bottom' => '15mm',
+		);
+		
+		$scriptParams = array();
+		$tsSettings = $this->conf['scriptParams.'];
+		foreach($defaultSettings as $param => $value) {
+			if(!isset($tsSettings[$param])) {
+				$tsSettings[$param] = $value;
+			}
+		}
+		
+		$finalSettings = array();
+		foreach($tsSettings as $param => $value) {
+			if(substr($param, 0, 2) !== '--') {
+				$param = '--' . $param;
+			}
+			$finalSettings[$param] = $value;
+		}
+		return $finalSettings;
+	}
 
 	/**
 	 * Creates the parameters for the wkhtmltopdf call.
@@ -150,28 +182,27 @@ class tx_webkitpdf_pi1 extends tslib_pibase {
 	protected function buildScriptOptions() {
 		$options = array();
 		if($this->conf['pageURLInHeader']) {
-			$options[] = '--header-center [webpage]';
+			$options['--header-center'] = '[webpage]';
 		}
 		
 		if($this->conf['copyrightNotice']) {
-			$options[] = '--footer-left " Copyright ' . date('Y', time()) . $this->conf['copyrightNotice'] . '"';
+			$options['--footer-left'] = '" Copyright ' . date('Y', time()) . $this->conf['copyrightNotice'] . '"';
 		}
-
-		$options[] = '--footer-right [page]/[toPage]';
-		$options[] = '--footer-font-size 6pt';
-		$options[] = '--header-font-size 6pt';
-		$options[] = '--margin-left 15mm';
-		$options[] = '--margin-right 15mm';
-		$options[] = '--margin-top 15mm';
-		$options[] = '--margin-bottom 15mm';
 		
 		if($this->conf['additionalStyleSheet']) {
 			$this->conf['additionalStyleSheet'] = $this->sanitizePath($this->conf['additionalStyleSheet']);
-			$options[] = '--user-style-sheet ' . t3lib_div::getIndpEnv('TYPO3_REQUEST_HOST') . $this->conf['additionalStyleSheet'];
+			$options['--user-style-sheet'] = t3lib_div::getIndpEnv('TYPO3_REQUEST_HOST') . $this->conf['additionalStyleSheet'];
 				
 		}
+
+		$userSettings = $this->readScriptSettings();
+		$options = array_merge($options, $userSettings);
 		
-		return implode(' ', $options);
+		$paramString = '';
+		foreach($options as $param => $value) {
+			$paramsString .= ' ' . $param . ' ' . $value; 
+		}
+		return $paramsString;
 	}
 
 	/**
@@ -197,7 +228,7 @@ class tx_webkitpdf_pi1 extends tslib_pibase {
 
 }
 
-if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/webkitpdf/pi1/class.tx_webkitpdf_pi1.php'])	{
+if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/webkitpdf/pi1/class.tx_webkitpdf_pi1.php']) {
 	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/webkitpdf/pi1/class.tx_webkitpdf_pi1.php']);
 }
 
