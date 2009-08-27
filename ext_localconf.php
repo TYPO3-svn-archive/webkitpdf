@@ -8,7 +8,8 @@ t3lib_extMgm::addPItoST43($_EXTKEY, 'pi1/class.tx_webkitpdf_pi1.php', '_pi1', 'l
 // Clear cache
 $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_tcemain.php']['clearCachePostProc'][$_EXTKEY] = 'EXT:webkitpdf/res/class.tx_webkitpdf_cache.php:&tx_webkitpdf_cache->clearCachePostProc';
 
-$_EXTCONF = unserialize($_EXTCONF);    // unserializing the configuration so we can use it here
+// Unserializing the configuration so we can use it here
+$_EXTCONF = unserialize($_EXTCONF);
 $GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$_EXTKEY]['cacheThreshold'] = intval($_EXTCONF['cacheThreshold']);
 
 ?>

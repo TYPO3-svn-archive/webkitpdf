@@ -27,7 +27,7 @@
  * @author Reinhard Führicht <rf@typoheads.at>
  */
 
-require_once(PATH_tslib.'class.tslib_pibase.php');
+require_once(PATH_tslib . 'class.tslib_pibase.php');
 require_once(t3lib_extMgm::extPath('webkitpdf') . '/res/class.tx_webkitpdf_cache.php');
 
 class tx_webkitpdf_pi1 extends tslib_pibase {
@@ -60,7 +60,7 @@ class tx_webkitpdf_pi1 extends tslib_pibase {
 		if($this->conf['customTempOutputPath']) {
 			$this->outputPath .= $this->sanitizePath($this->conf['customTempOutputPath']);
 		} else {
-			$this->outputPath .=  '/typo3temp/tx_webkitpdf/';
+			$this->outputPath .= '/typo3temp/tx_webkitpdf/';
 		}
 		
 		$this->paramName = 'urls';
@@ -81,7 +81,6 @@ class tx_webkitpdf_pi1 extends tslib_pibase {
 		}
 		
 		$this->readScriptSettings();
-		
 		$this->cacheManager = t3lib_div::makeInstance('tx_webkitpdf_cache');
 	}
 	
@@ -189,9 +188,9 @@ class tx_webkitpdf_pi1 extends tslib_pibase {
 			$options['--footer-left'] = '" Copyright ' . date('Y', time()) . $this->conf['copyrightNotice'] . '"';
 		}
 		
-		if($this->conf['additionalStyleSheet']) {
-			$this->conf['additionalStyleSheet'] = $this->sanitizePath($this->conf['additionalStyleSheet']);
-			$options['--user-style-sheet'] = t3lib_div::getIndpEnv('TYPO3_REQUEST_HOST') . $this->conf['additionalStyleSheet'];
+		if($this->conf['additionalStylesheet']) {
+			$this->conf['additionalStylesheet'] = $this->sanitizePath($this->conf['additionalStylesheet'], FALSE);
+			$options['--user-style-sheet'] = t3lib_div::getIndpEnv('TYPO3_REQUEST_HOST') . $this->conf['additionalStylesheet'];
 				
 		}
 
@@ -211,15 +210,15 @@ class tx_webkitpdf_pi1 extends tslib_pibase {
 	 * @param	string		$path: The path to be sanitized
 	 * @return	Sanitized path
 	 */
-	protected function sanitizePath($path) {
+	protected function sanitizePath($path, $trailingSlash = TRUE) {
 		
 		// slash as last character
-		if(substr($path, (strlen($path) - 1)) != '/') {
+		if($trailingSlash && substr($path, (strlen($path) - 1)) !== '/') {
 			$path .= '/';
 		}
 		
 		//slash as first character
-		if(substr($path, 0, 1) != '/') {
+		if(substr($path, 0, 1) !== '/') {
 			$path = '/' . $path;
 		}
 		
