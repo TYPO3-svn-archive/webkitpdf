@@ -104,6 +104,9 @@ class tx_webkitpdf_pi1 extends tslib_pibase {
 		$this->init($conf);
 
 		$urls = $this->piVars[$this->paramName];
+		if(!$urls) {
+			$urls = $this->conf['urls.'];
+		}
 		$content = '';
 		if(!empty($urls)) {
 			if(count($urls) > 0) {
@@ -135,6 +138,9 @@ class tx_webkitpdf_pi1 extends tslib_pibase {
 					$this->filename = $this->cacheManager->get($origUrls);
 				}
 				
+				if($this->conf['fileOnly'] == 1) {
+					return $this->filename;
+				}
 				header('Content-type: application/pdf');
 				header('Content-Disposition: attachment; filename="' . $this->filenameOnly . '"');
 				readfile($this->filename);
