@@ -1,0 +1,13 @@
+plugin.tx_webkitpdf_pi1.pdfLink = TEXT
+plugin.tx_webkitpdf_pi1.pdfLink {
+  value = {$plugin.tx_webkitpdf_pi1.pdfLink.linkText}
+  typolink {
+    parameter = {$plugin.tx_webkitpdf_pi1.pdfLink.pluginPid}
+    no_cache = {$plugin.tx_webkitpdf_pi1.pdfLink.no_cache}
+    additionalParams {
+      data = getIndpEnv:TYPO3_REQUEST_URL
+      wrap = &tx_webkitpdf_pi1[urls][0]=|
+    }
+  }
+}
+
