@@ -210,6 +210,7 @@ class tx_webkitpdf_pi1 extends tslib_pibase {
 		
 		$paramString = '';
 		foreach($options as $param => $value) {
+			$value = (strlen($value) > 0) ? '"' . $value . '"' : '';
 			$paramsString .= ' ' . $param . ' ' . $value; 
 		}
 		return $paramsString;
