@@ -11,3 +11,10 @@ plugin.tx_webkitpdf_pi1.pdfLink {
   }
 }
 
+# Add HTTP response header "Content-Type" when serving PDF files
+[globalVar = TSFE:id = {$plugin.tx_webkitpdf_pi1.pdfLink.pluginPid}]
+  config {
+    additionalHeaders = Content-Type: application/pdf
+  }
+[global]
+
