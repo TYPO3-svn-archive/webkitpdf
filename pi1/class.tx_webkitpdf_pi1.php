@@ -123,12 +123,14 @@ class tx_webkitpdf_pi1 extends tslib_pibase {
 					$scriptCall = 	$this->scriptPath. 'wkhtmltopdf ' .
 									$this->buildScriptOptions() . ' ' .
 									implode(' ', $urls) . ' ' .
-									$this->filename;
+									$this->filename .
+									' 2>&1';
 					
-					if($this->conf['debugScriptCall'] === '1') {
-						print $scriptCall;
-					}
-					exec($scriptCall);
+					$output = shell_exec($scriptCall);
+
+					// Write debugging information to devLog
+					$this->debugLogging('Executed shell command', -1, array($scriptCall));
+					$this->debugLogging('Output of shell command', -1, array($output));
 					
 					$this->cacheManager->store($origUrls, $this->filename);
 					
@@ -237,6 +239,22 @@ class tx_webkitpdf_pi1 extends tslib_pibase {
 		return $path;
 	}
 
+	/**
+	 * Writes log messages to devLog
+	 *
+	 * Acts as a wrapper for t3lib_div::devLog()
+	 * Additionally checks if debug is turned on
+	 *
+	 * @param	string		$title: title of the event
+	 * @param	string		$severity: severity of the debug event
+	 * @param	array		$dataVar: additional data
+	 * @return	void
+	 */
+	protected function debugLogging($title, $severity = -1, $dataVar = array()) {
+		if ($this->conf['debug']) {
+			t3lib_div::devlog($title, $this->extKey, $severity, $dataVar);
+		}
+	}
 }
 
 if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/webkitpdf/pi1/class.tx_webkitpdf_pi1.php']) {
