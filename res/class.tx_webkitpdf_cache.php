@@ -7,7 +7,6 @@ class tx_webkitpdf_cache {
 			
 			//cached files older than x minutes.
 			$minutes = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['webkitpdf']['cacheThreshold'];
-			t3lib_div::devLog('Clearing cached files older than ' . $minutes . ' minutes.', 'webkitpdf', -1);
 			$threshold = $now - $minutes * 60;
 			
 			$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('uid,crdate,filename', 'tx_webkitpdf_cache', 'crdate<' . $threshold);
@@ -22,6 +21,10 @@ class tx_webkitpdf_cache {
 					if(file_exists($file)) {
 						unlink($file);
 					}
+				}
+				// Write a message to devlog
+				if ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['webkitpdf']['debug'] === 1) {
+					t3lib_div::devLog('Clearing cached files older than ' . $minutes . ' minutes.', 'webkitpdf', -1);
 				}
 			}
 		}
