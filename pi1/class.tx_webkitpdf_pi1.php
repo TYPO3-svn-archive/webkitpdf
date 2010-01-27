@@ -243,7 +243,7 @@ class tx_webkitpdf_pi1 extends tslib_pibase {
 	 * Writes log messages to devLog
 	 *
 	 * Acts as a wrapper for t3lib_div::devLog()
-	 * Additionally checks if debug is turned on
+	 * Additionally checks if debug was activated
 	 *
 	 * @param	string		$title: title of the event
 	 * @param	string		$severity: severity of the debug event
@@ -251,7 +251,7 @@ class tx_webkitpdf_pi1 extends tslib_pibase {
 	 * @return	void
 	 */
 	protected function debugLogging($title, $severity = -1, $dataVar = array()) {
-		if ($this->conf['debug']) {
+		if ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['webkitpdf']['debug'] === 1) {
 			t3lib_div::devlog($title, $this->extKey, $severity, $dataVar);
 		}
 	}
