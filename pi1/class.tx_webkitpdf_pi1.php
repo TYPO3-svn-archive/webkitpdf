@@ -160,8 +160,8 @@ class tx_webkitpdf_pi1 extends tslib_pibase {
 	protected function readScriptSettings() {
 		$defaultSettings = array(
 			'footer-right' => '[page]/[toPage]',
-			'footer-font-size' => '6pt',
-			'header-font-size' => '6pt',
+			'footer-font-size' => '6',
+			'header-font-size' => '6',
 			'margin-left' => '15mm',
 			'margin-right' => '15mm',
 			'margin-top' => '15mm',
