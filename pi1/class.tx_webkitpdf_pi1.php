@@ -34,6 +34,10 @@ class tx_webkitpdf_pi1 extends tslib_pibase {
 	var $prefixId = 'tx_webkitpdf_pi1';
 	var $scriptRelPath = 'pi1/class.tx_webkitpdf_pi1.php';	
 	var $extKey = 'webkitpdf';	
+
+	// Disbale caching: Don't check cHash, because the plugin is a USER_INT object
+	public $pi_checkCHash = FALSE;
+	public $pi_USER_INT_obj = 1;
 	
 	protected $cacheManager;
 	protected $scriptPath;

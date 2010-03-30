@@ -6,7 +6,4 @@ plugin.tx_webkitpdf_pi1.pdfLink {
   # cat=plugin.tx_webkitpdf_pi1/links/2; type=string; label=linkText: PDF link text.
   linkText = Save as PDF
 
-  # cat=plugin.tx_webkitpdf_pi1/links/3; type=options[cached=0,no_cache=1]; label=no_cache: Use uncached page when creating PDF files.
-  no_cache = 1
-
 }
