@@ -109,8 +109,23 @@ class tx_webkitpdf_pi1 extends tslib_pibase {
 
 		$urls = $this->piVars[$this->paramName];
 		if(!$urls) {
-			$urls = $this->conf['urls.'];
+			$urls = array();
+			// Allow string/stdWrap in urls
+			// We need to do some ugly checks for backward compatibility
+			$urlsArr = $this->conf['urls.'];
+			foreach ($urlsArr as $key => $value) {
+				$lastChar = substr($key, strlen($key) - 1);
+				if ($lastChar === '.' && is_array($value)) {
+					$key = substr($key, 0, -1);
+					$str = $urls[$key];
+					$urls[$key] = trim($this->cObj->stdWrap($str, $value));
+					unset($urlsArr[$key]);
+				} else {
+					$urls[$key] = $value;
+				}
+			}
 		}
+
 		$content = '';
 		if(!empty($urls)) {
 			if(count($urls) > 0) {
