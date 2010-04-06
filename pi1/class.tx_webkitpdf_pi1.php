@@ -133,7 +133,7 @@ class tx_webkitpdf_pi1 extends tslib_pibase {
 				$origUrls = implode(' ', $urls);
 				
 				foreach($urls as &$url) {
-					$url = '"' . $url . '"';
+					$url = $this->wrapUriName($url);
 				}
 				
 				// not in cache. generate PDF file
@@ -273,6 +273,16 @@ class tx_webkitpdf_pi1 extends tslib_pibase {
 		if ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['webkitpdf']['debug'] === 1) {
 			t3lib_div::devlog($title, $this->extKey, $severity, $dataVar);
 		}
+	}
+	
+	/**
+	 * Escapes a URI resource name so it can safely be used on the command line.
+	 *
+	 * @param   string  $inputName URI resource name to safeguard, must not be empty
+	 * @return  string  $inputName escaped as needed
+	 */
+	protected function wrapUriName($inputName) {
+		return escapeshellarg($inputName);
 	}
 }
 

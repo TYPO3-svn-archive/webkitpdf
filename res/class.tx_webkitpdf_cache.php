@@ -33,7 +33,7 @@ class tx_webkitpdf_cache {
 	public function isInCache($urls) {
 		$found = FALSE;
 		
-		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('uid', 'tx_webkitpdf_cache', "urls='" . $urls. "'");
+		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('uid', 'tx_webkitpdf_cache', "urls='" . $GLOBALS['TYPO3_DB']->fullQuoteStr($urls, 'tx_webkitpdf_cache') . "'");
 		if($res && $GLOBALS['TYPO3_DB']->sql_num_rows($res) === 1) {
 			$found = TRUE;
 			$GLOBALS['TYPO3_DB']->sql_free_result($res);
@@ -52,7 +52,7 @@ class tx_webkitpdf_cache {
 	
 	public function get($urls) {
 		$filename = FALSE;
-		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('filename', 'tx_webkitpdf_cache', "urls='" . $urls. "'");
+		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('filename', 'tx_webkitpdf_cache', "urls='" . $GLOBALS['TYPO3_DB']->fullQuoteStr($urls, 'tx_webkitpdf_cache') . "'");
 		if($res && $GLOBALS['TYPO3_DB']->sql_num_rows($res) === 1) {
 			$row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
 			$filename = $row['filename'];
