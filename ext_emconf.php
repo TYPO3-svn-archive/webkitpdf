@@ -1,13 +1,13 @@
 <?php
 
 ########################################################################
-# Extension Manager/Repository config file for ext: "webkitpdf"
+# Extension Manager/Repository config file for ext "webkitpdf".
 #
-# Auto generated 03-11-2009 08:23
+# Auto generated 06-04-2010 19:13
 #
 # Manual updates:
-# Only the data in the array - anything else is removed by next write.
-# "version" and "dependencies" must not be touched!
+# Only the data in the array - everything else is removed by next
+# writing. "version" and "dependencies" must not be touched!
 ########################################################################
 
 $EM_CONF[$_EXTKEY] = array(
@@ -15,7 +15,7 @@ $EM_CONF[$_EXTKEY] = array(
 	'description' => 'Generate PDF files using WebKit rendering engine.',
 	'category' => 'plugin',
 	'shy' => 0,
-	'version' => '1.1.3',
+	'version' => '1.1.4',
 	'dependencies' => '',
 	'conflicts' => '',
 	'priority' => '',
@@ -40,7 +40,7 @@ $EM_CONF[$_EXTKEY] = array(
 		'suggests' => array(
 		),
 	),
-	'_md5_values_when_last_written' => 'a:13:{s:21:"ext_conf_template.txt";s:4:"3140";s:12:"ext_icon.gif";s:4:"f735";s:17:"ext_localconf.php";s:4:"b7f7";s:14:"ext_tables.php";s:4:"9c04";s:14:"ext_tables.sql";s:4:"2937";s:16:"locallang_db.xml";s:4:"5127";s:14:"doc/manual.pdf";s:4:"7ecc";s:14:"doc/manual.sxw";s:4:"06b2";s:32:"res/class.tx_webkitpdf_cache.php";s:4:"232e";s:22:"res/user_webkitpdf.php";s:4:"b3be";s:15:"res/wkhtmltopdf";s:4:"3774";s:30:"pi1/class.tx_webkitpdf_pi1.php";s:4:"477c";s:17:"pi1/locallang.xml";s:4:"3153";}',
+	'_md5_values_when_last_written' => 'a:15:{s:21:"ext_conf_template.txt";s:4:"d376";s:12:"ext_icon.gif";s:4:"f735";s:17:"ext_localconf.php";s:4:"01c8";s:14:"ext_tables.php";s:4:"4310";s:14:"ext_tables.sql";s:4:"2937";s:16:"locallang_db.xml";s:4:"5127";s:14:"doc/manual.pdf";s:4:"7ecc";s:14:"doc/manual.sxw";s:4:"e4dc";s:30:"pi1/class.tx_webkitpdf_pi1.php";s:4:"7f55";s:17:"pi1/locallang.xml";s:4:"3153";s:32:"res/class.tx_webkitpdf_cache.php";s:4:"e435";s:22:"res/user_webkitpdf.php";s:4:"438e";s:15:"res/wkhtmltopdf";s:4:"3774";s:20:"static/constants.txt";s:4:"1701";s:16:"static/setup.txt";s:4:"8e66";}',
 	'suggests' => array(
 	),
 );
