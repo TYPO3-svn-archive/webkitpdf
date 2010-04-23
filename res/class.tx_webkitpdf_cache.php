@@ -63,4 +63,8 @@ class tx_webkitpdf_cache {
 	
 }
 
+if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/webkitpdf/res/class.tx_webkitpdf_cache.php']) {
+	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/webkitpdf/res/class.tx_webkitpdf_cache.php']);
+}
+
 ?>
