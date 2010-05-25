@@ -42,12 +42,15 @@ class tx_webkitpdf_cache {
 	}
 	
 	public function store($urls, $filename) {
-		$insertFields = array(
-			'crdate' => time(),
-			'filename' => $filename,
-			'urls' => md5($urls)
-		);
-		$GLOBALS['TYPO3_DB']->exec_INSERTquery('tx_webkitpdf_cache', $insertFields);
+		$minutes = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['webkitpdf']['cacheThreshold'];
+		if(intval($minutes) > 0) {
+			$insertFields = array(
+				'crdate' => time(),
+				'filename' => $filename,
+				'urls' => md5($urls)
+			);
+			$GLOBALS['TYPO3_DB']->exec_INSERTquery('tx_webkitpdf_cache', $insertFields);
+		}
 	}
 	
 	public function get($urls) {
