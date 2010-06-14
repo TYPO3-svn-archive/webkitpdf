@@ -12,7 +12,6 @@ class tx_webkitpdf_utils {
 		return escapeshellarg($inputName);
 	}
 	
-
 	static public function sanitizeURL($url) {
 		
 		//Make sure that host of the URL matches TYPO3 host.
@@ -20,7 +19,6 @@ class tx_webkitpdf_utils {
 		if($parts['host'] !== t3lib_div::getIndpEnv('TYPO3_HOST_ONLY')) {
 			throw new Exception('Host "' . $parts['host'] . '" does not match TYPO3 host.');
 		}
-
 		$url = self::wrapUriName($url);
 		
 		return $url;
@@ -64,7 +62,6 @@ class tx_webkitpdf_utils {
 		return $path;
 	}
 	
-	
 	static public function generateHash(){
 		$result = '';
 		$charPool = '0123456789abcdefghijklmnopqrstuvwxyz';
@@ -73,7 +70,6 @@ class tx_webkitpdf_utils {
 		}
 		return sha1(md5(sha1($result)));
 	}
-	
 }
 
 ?>

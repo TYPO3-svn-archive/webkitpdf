@@ -57,8 +57,9 @@ class tx_webkitpdf_pi1 extends tslib_pibase {
 		
 		// Process stdWrap properties
 		$temp = $conf['scriptParams.'];
+		unset($conf['scriptParams.']);
 		$this->conf = $this->processStdWraps($conf);
-		$this->conf['scriptParams.'] = $temp;
+		$this->conf['scriptParams'] = $this->processStdWraps($temp);
 		
 		$this->pi_setPiVarDefaults();
 		
@@ -169,7 +170,7 @@ class tx_webkitpdf_pi1 extends tslib_pibase {
 		);
 		
 		$scriptParams = array();
-		$tsSettings = $this->conf['scriptParams.'];
+		$tsSettings = $this->conf['scriptParams'];
 		foreach($defaultSettings as $param => $value) {
 			if(!isset($tsSettings[$param])) {
 				$tsSettings[$param] = $value;
@@ -178,6 +179,7 @@ class tx_webkitpdf_pi1 extends tslib_pibase {
 		
 		$finalSettings = array();
 		foreach($tsSettings as $param => $value) {
+			$value = trim($value);
 			if(substr($param, 0, 2) !== '--') {
 				$param = '--' . $param;
 			}
@@ -198,7 +200,7 @@ class tx_webkitpdf_pi1 extends tslib_pibase {
 		}
 		
 		if($this->conf['copyrightNotice']) {
-			$options['--footer-left'] = '" Copyright ' . date('Y', time()) . $this->conf['copyrightNotice'] . '"';
+			$options['--footer-left'] = '© ' . date('Y', time()) . $this->conf['copyrightNotice'] . '';
 		}
 		
 		if($this->conf['additionalStylesheet']) {
@@ -212,7 +214,9 @@ class tx_webkitpdf_pi1 extends tslib_pibase {
 		
 		$paramString = '';
 		foreach($options as $param => $value) {
-			$value = (strlen($value) > 0) ? '"' . $value . '"' : '';
+			if(strlen($value) > 0) {
+				$value = '"' . $value . '"';
+			}
 			$paramsString .= ' ' . $param . ' ' . $value; 
 		}
 		return $paramsString;
@@ -256,7 +260,10 @@ class tx_webkitpdf_pi1 extends tslib_pibase {
 					$process = FALSE;
 				}
 			}
-			if ($process) {
+			
+			if ((substr($key, -1) === '.' && !array_key_exists(substr($key, 0, -1), $tsSettings)) ||
+				(substr($key, -1) !== '.' && array_key_exists($key . '.', $tsSettings)) && !strstr($key, 'scriptParams')) {
+				
 				$tsSettings[$key] = $this->cObj->stdWrap($value, $tsSettings[$key . '.']);
 
 				// Remove the additional TS properties after processing, otherwise they'll be translated to pdf properties

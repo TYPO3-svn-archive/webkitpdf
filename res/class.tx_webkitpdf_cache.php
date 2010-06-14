@@ -22,6 +22,7 @@ class tx_webkitpdf_cache {
 						unlink($file);
 					}
 				}
+				
 				// Write a message to devlog
 				if ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['webkitpdf']['debug'] === 1) {
 					t3lib_div::devLog('Clearing cached files older than ' . $minutes . ' minutes.', 'webkitpdf', -1);
