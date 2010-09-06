@@ -127,11 +127,11 @@ class tx_webkitpdf_pi1 extends tslib_pibase {
 									$this->filename .
 									' 2>&1';
 					
-					$output = shell_exec($scriptCall);
+					exec($scriptCall, $output);
 
 					// Write debugging information to devLog
 					tx_webkitpdf_utils::debugLogging('Executed shell command', -1, array($scriptCall));
-					tx_webkitpdf_utils::debugLogging('Output of shell command', -1, array($output));
+					tx_webkitpdf_utils::debugLogging('Output of shell command', -1, $output);
 					
 					$this->cacheManager->store($origUrls, $this->filename);
 					
