@@ -115,6 +115,12 @@ class tx_webkitpdf_pi1 extends tslib_pibase {
 				$origUrls = implode(' ', $urls);
 				
 				foreach($urls as &$url) {
+					if($GLOBALS['TSFE']->loginUser) {
+						
+						// Do not cache access restricted pages
+						$loadFromCache = FALSE;
+						$url = tx_webkitpdf_utils::appendFESessionInfoToURL($url);
+					}
 					$url = tx_webkitpdf_utils::sanitizeURL($url);
 				}
 				
