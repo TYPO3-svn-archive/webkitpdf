@@ -113,7 +113,7 @@ class tx_webkitpdf_pi1 extends tslib_pibase {
 			if(count($urls) > 0) {
 				
 				$origUrls = implode(' ', $urls);
-				
+				$loadFromCache = TRUE;
 				foreach($urls as &$url) {
 					if($GLOBALS['TSFE']->loginUser) {
 						
@@ -125,7 +125,7 @@ class tx_webkitpdf_pi1 extends tslib_pibase {
 				}
 				
 				// not in cache. generate PDF file
-				if(!$this->cacheManager->isInCache($origUrls) || $this->conf['debugScriptCall'] === '1') {
+				if(!$this->cacheManager->isInCache($origUrls) || $this->conf['debugScriptCall'] === '1' || !$loadFromCache) {
 					
 					$scriptCall = 	$this->scriptPath. 'wkhtmltopdf ' .
 									$this->buildScriptOptions() . ' ' .
