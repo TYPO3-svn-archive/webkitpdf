@@ -158,6 +158,7 @@ class tx_webkitpdf_pi1 extends tslib_pibase {
 				header('Content-Length: ' . $filesize);
 				header('Content-Disposition: attachment; filename="' . $this->filenameOnly . '"');
 				readfile($this->filename);
+				exit(0);
 			}
 		}
 		
