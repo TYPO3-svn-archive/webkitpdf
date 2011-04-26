@@ -2,31 +2,29 @@
 
 class tx_webkitpdf_cache {
 	public function clearCachePostProc(&$params, &$pObj) {
-		if($params['cacheCmd']) {
-			$now = time();
+		$now = time();
+		
+		//cached files older than x minutes.
+		$minutes = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['webkitpdf']['cacheThreshold'];
+		$threshold = $now - $minutes * 60;
+		
+		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('uid,crdate,filename', 'tx_webkitpdf_cache', 'crdate<' . $threshold);
+		if($res && $GLOBALS['TYPO3_DB']->sql_num_rows($res) > 0) {
+			$filenames = array();
+			while(($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) !== FALSE) {
+				$filenames[] = $row['filename'];
+			}
+			$GLOBALS['TYPO3_DB']->sql_free_result($res);
+			$GLOBALS['TYPO3_DB']->exec_DELETEquery('tx_webkitpdf_cache', 'crdate<' . $threshold);
+			foreach($filenames as $file) {
+				if(file_exists($file)) {
+					unlink($file);
+				}
+			}
 			
-			//cached files older than x minutes.
-			$minutes = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['webkitpdf']['cacheThreshold'];
-			$threshold = $now - $minutes * 60;
-			
-			$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('uid,crdate,filename', 'tx_webkitpdf_cache', 'crdate<' . $threshold);
-			if($res && $GLOBALS['TYPO3_DB']->sql_num_rows($res) > 0) {
-				$filenames = array();
-				while(($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) !== FALSE) {
-					$filenames[] = $row['filename'];
-				}
-				$GLOBALS['TYPO3_DB']->sql_free_result($res);
-				$GLOBALS['TYPO3_DB']->exec_DELETEquery('tx_webkitpdf_cache', 'crdate<' . $threshold);
-				foreach($filenames as $file) {
-					if(file_exists($file)) {
-						unlink($file);
-					}
-				}
-				
-				// Write a message to devlog
-				if ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['webkitpdf']['debug'] === 1) {
-					t3lib_div::devLog('Clearing cached files older than ' . $minutes . ' minutes.', 'webkitpdf', -1);
-				}
+			// Write a message to devlog
+			if ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['webkitpdf']['debug'] === 1) {
+				t3lib_div::devLog('Clearing cached files older than ' . $minutes . ' minutes.', 'webkitpdf', -1);
 			}
 		}
 	}
