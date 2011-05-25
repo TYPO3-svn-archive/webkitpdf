@@ -114,6 +114,12 @@ class tx_webkitpdf_pi1 extends tslib_pibase {
 				
 				$origUrls = implode(' ', $urls);
 				$loadFromCache = TRUE;
+				
+				$allowedHosts = FALSE;
+				if($this->conf['allowedHosts']) {
+					$allowedHosts = t3lib_div::trimExplode(',', $this->conf['allowedHosts']);
+				}
+				
 				foreach($urls as &$url) {
 					if($GLOBALS['TSFE']->loginUser) {
 						
@@ -121,7 +127,7 @@ class tx_webkitpdf_pi1 extends tslib_pibase {
 						$loadFromCache = FALSE;
 						$url = tx_webkitpdf_utils::appendFESessionInfoToURL($url);
 					}
-					$url = tx_webkitpdf_utils::sanitizeURL($url);
+					$url = tx_webkitpdf_utils::sanitizeURL($url, $allowedHosts);
 				}
 				
 				// not in cache. generate PDF file

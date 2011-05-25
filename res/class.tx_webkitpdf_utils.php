@@ -21,13 +21,14 @@ class tx_webkitpdf_utils {
 	 */
 	static public function sanitizeURL($url) {
 		
-		//Make sure that host of the URL matches TYPO3 host.
+		//Make sure that host of the URL matches TYPO3 host or one of allowed hosts set in TypoScript.
 		$parts = parse_url($url);
 		if($parts['host'] !== t3lib_div::getIndpEnv('TYPO3_HOST_ONLY')) {
-			throw new Exception('Host "' . $parts['host'] . '" does not match TYPO3 host.');
+			if(($allowedHosts && !in_array($parts['host'], $allowedHosts)) || !$allowedHosts) {
+				throw new Exception('Host "' . $parts['host'] . '" does not match TYPO3 host.');
+			}
 		}
 		$url = self::wrapUriName($url);
-		
 		return $url;
 	}
 	
