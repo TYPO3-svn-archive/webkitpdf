@@ -163,6 +163,7 @@ class tx_webkitpdf_pi1 extends tslib_pibase {
 				header('Content-Transfer-Encoding: Binary');
 				header('Content-Length: ' . $filesize);
 				header('Content-Disposition: attachment; filename="' . $this->filenameOnly . '"');
+				header('X-Robots-Tag: noindex');
 				readfile($this->filename);
 				exit(0);
 			}
