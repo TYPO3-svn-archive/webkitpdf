@@ -93,7 +93,7 @@ class tx_webkitpdf_pi1 extends tslib_pibase {
 		}
 
 		$this->readScriptSettings();
-		$this->cacheManager = t3lib_div::makeInstance('tx_webkitpdf_cache');
+		$this->cacheManager = t3lib_div::makeInstance('tx_webkitpdf_cache', $this->conf);
 
 		$this->contentDisposition = 'attachment';
 		if(intval($this->conf['openFilesInline']) === 1) {
@@ -177,6 +177,10 @@ class tx_webkitpdf_pi1 extends tslib_pibase {
 				header('Content-Disposition: ' . $this->contentDisposition . '; filename="' . $this->filenameOnly . '"');
 				header('X-Robots-Tag: noindex');
 				readfile($this->filename);
+
+				if(!$this->cacheManager->isCachingEnabled()) {
+					unlink($this->filename);
+				}
 				exit(0);
 			}
 		}
