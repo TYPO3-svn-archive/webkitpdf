@@ -36,7 +36,7 @@ class tx_webkitpdf_pi1 extends tslib_pibase {
 	var $scriptRelPath = 'pi1/class.tx_webkitpdf_pi1.php';	
 	var $extKey = 'webkitpdf';	
 
-	// Disbale caching: Don't check cHash, because the plugin is a USER_INT object
+	// Disable caching: Don't check cHash, because the plugin is a USER_INT object
 	public $pi_checkCHash = FALSE;
 	public $pi_USER_INT_obj = 1;
 	
@@ -59,10 +59,12 @@ class tx_webkitpdf_pi1 extends tslib_pibase {
 		$temp = $conf['scriptParams.'];
 		unset($conf['scriptParams.']);
 		$this->conf = $this->processStdWraps($conf);
-		$this->conf['scriptParams'] = $this->processStdWraps($temp);
-		
+		if(is_array($temp)) {
+			$this->conf['scriptParams'] = $this->processStdWraps($temp);
+		}
+
 		$this->pi_setPiVarDefaults();
-		
+
 		$this->scriptPath = t3lib_extMgm::extPath('webkitpdf') . 'res/';
 		if($this->conf['customScriptPath']) {
 			$this->scriptPath = $this->conf['customScriptPath'];
@@ -266,23 +268,25 @@ class tx_webkitpdf_pi1 extends tslib_pibase {
 	protected function processStdWraps($tsSettings) {
 		
 		// Get TS values and process stdWrap properties
-		foreach ($tsSettings as $key => $value) {
-			$process = TRUE;			
-			if (substr($key, -1) === '.') {
-				$key = substr($key, 0, -1);
-				if (array_key_exists($key, $tsSettings)) {
-					$process = FALSE;
+		if(is_array($tsSettings)) {
+			foreach ($tsSettings as $key => $value) {
+				$process = TRUE;			
+				if (substr($key, -1) === '.') {
+					$key = substr($key, 0, -1);
+					if (array_key_exists($key, $tsSettings)) {
+						$process = FALSE;
+					}
 				}
-			}
-			
-			if ((substr($key, -1) === '.' && !array_key_exists(substr($key, 0, -1), $tsSettings)) ||
-				(substr($key, -1) !== '.' && array_key_exists($key . '.', $tsSettings)) && !strstr($key, 'scriptParams')) {
 				
-				$tsSettings[$key] = $this->cObj->stdWrap($value, $tsSettings[$key . '.']);
-
-				// Remove the additional TS properties after processing, otherwise they'll be translated to pdf properties
-				if (isset($tsSettings[$key . '.'])) {
-					unset($tsSettings[$key . '.']);
+				if ((substr($key, -1) === '.' && !array_key_exists(substr($key, 0, -1), $tsSettings)) ||
+					(substr($key, -1) !== '.' && array_key_exists($key . '.', $tsSettings)) && !strstr($key, 'scriptParams')) {
+					
+					$tsSettings[$key] = $this->cObj->stdWrap($value, $tsSettings[$key . '.']);
+	
+					// Remove the additional TS properties after processing, otherwise they'll be translated to pdf properties
+					if (isset($tsSettings[$key . '.'])) {
+						unset($tsSettings[$key . '.']);
+					}
 				}
 			}
 		}
