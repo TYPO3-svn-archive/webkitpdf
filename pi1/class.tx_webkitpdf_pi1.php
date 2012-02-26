@@ -39,14 +39,15 @@ class tx_webkitpdf_pi1 extends tslib_pibase {
 	// Disable caching: Don't check cHash, because the plugin is a USER_INT object
 	public $pi_checkCHash = FALSE;
 	public $pi_USER_INT_obj = 1;
-	
+
 	protected $cacheManager;
 	protected $scriptPath;
 	protected $outputPath;
 	protected $paramName;
 	protected $filename;
 	protected $filenameOnly;
-	
+	protected $contentDisposition;
+
 	/**
 	 * Init parameters. Reads TypoScript settings.
 	 *
@@ -75,24 +76,29 @@ class tx_webkitpdf_pi1 extends tslib_pibase {
 		} else {
 			$this->outputPath .= '/typo3temp/tx_webkitpdf/';
 		}
-		
+
 		$this->paramName = 'urls';
 		if($this->conf['customParameterName']) {
 			$this->paramName = $this->conf['customParameterName'];
 		}
-		
+
 		$this->filename = $this->outputPath . $this->conf['filePrefix'] . tx_webkitpdf_utils::generateHash() . '.pdf';		
 		$this->filenameOnly = basename($this->filename);
 		if($this->conf['staticFileName']) {
 			$this->filenameOnly = $this->conf['staticFileName'];
 		}
-			
+
 		if(substr($this->filenameOnly, strlen($this->filenameOnly) - 4) !== '.pdf') {
 			$this->filenameOnly .= '.pdf';
 		}
-		
+
 		$this->readScriptSettings();
 		$this->cacheManager = t3lib_div::makeInstance('tx_webkitpdf_cache');
+
+		$this->contentDisposition = 'attachment';
+		if(intval($this->conf['openFilesInline']) === 1) {
+			$this->contentDisposition = 'inline';
+		}
 	}
 
 	/**
@@ -164,7 +170,7 @@ class tx_webkitpdf_pi1 extends tslib_pibase {
 				header('Content-type: application/pdf');
 				header('Content-Transfer-Encoding: Binary');
 				header('Content-Length: ' . $filesize);
-				header('Content-Disposition: attachment; filename="' . $this->filenameOnly . '"');
+				header('Content-Disposition: ' . $this->contentDisposition . '; filename="' . $this->filenameOnly . '"');
 				header('X-Robots-Tag: noindex');
 				readfile($this->filename);
 				exit(0);
