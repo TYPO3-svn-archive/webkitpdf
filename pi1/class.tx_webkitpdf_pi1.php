@@ -113,7 +113,11 @@ class tx_webkitpdf_pi1 extends tslib_pibase {
 
 		$urls = $this->piVars[$this->paramName];
 		if(!$urls) {
-			$urls = $this->conf['urls.'];
+			if (isset($this->conf['urls.'])) {
+				$urls = $this->conf['urls.'];
+			} else {
+				$urls = array($this->conf['urls']);
+			}
 		}
 
 		$content = '';
