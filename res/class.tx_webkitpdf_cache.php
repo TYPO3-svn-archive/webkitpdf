@@ -5,7 +5,7 @@ class tx_webkitpdf_cache {
 	protected $conf;
 	protected $isEnabled;
 
-	public function __construct($conf) {
+	public function __construct($conf = array()) {
 		$this->conf = $conf;
 		$this->isEnabled = TRUE;
 		$minutes = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['webkitpdf']['cacheThreshold'];
