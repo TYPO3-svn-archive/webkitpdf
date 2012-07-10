@@ -19,7 +19,7 @@ class tx_webkitpdf_utils {
 	 * @param   string  $url The URL to be sanitized
 	 * @return  string  The sanitized URL
 	 */
-	static public function sanitizeURL($url) {
+	static public function sanitizeURL($url, $allowedHosts) {
 		
 		//Make sure that host of the URL matches TYPO3 host or one of allowed hosts set in TypoScript.
 		$parts = parse_url($url);
